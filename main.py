@@ -5,25 +5,26 @@ from classes import*
 import csv
 
 pygame.init()
+
 nameList = []
 pointsList = []
 
-def saveList(lista1,lista2):
+def saveList(nameList, pointsList):
     with open("Dates.csv", "w") as f:
         w = csv.writer(f)
         w.writerow(["Name","Point"])
         i = 0
-        while i < len(lista1):
-            row = [nameList[i],pointsList[i]]
+        while i < len(nameList):
+            row = [nameList[i], pointsList[i]]
             w.writerow(row)
             i +=1
 
 def main():
     raiz = tk.Tk()
     raiz.wm_title("The Jerry Game")
-    windows(master=raiz)
+    Windows(master=raiz)
 
-class windows(tk.Frame):
+class Windows(tk.Frame):
     #-------------CONSTRUCTOR----------------------
     def __init__(self, master=None):
         super().__init__(master, master.minsize(300,200))
@@ -36,27 +37,29 @@ class windows(tk.Frame):
     #------------METODOS--------------------------
     #---------------------------------VENTANA TKINTER-----------------------------------------------------------
     def widget(self): 
-        self.entry_name_label = tk.Label(self, text = "Name:", bg = "#282A36", fg = "#FFFFFF")
+        background_color = "#282A36"
+        font_color = "#FFFFFF"
+        self.entry_name_label = tk.Label(self, text = "Name:", bg = background_color, fg = font_color)
         self.entry_name_label.place(x = 0, y = 0)
         self.entry_name = tk.Entry(self)
         self.entry_name.place(x = 50, y = 3)
-        self.start_button = tk.Button(self, text = "Start", width = 7, command = lambda: (self.str_name(), self.Jerry_Game()), bg = "#282A36", fg = "#FFFFFF")
+        self.start_button = tk.Button(self, text = "Start", width = 7, command = lambda: (self.str_name(), self.Jerry_Game()), bg = background_color, fg = font_color)
         self.start_button.place(x = 50, y = 30)
-        self.finish_button = tk.Button(self, text = "Finish", width = 7, command = self.master.destroy, bg = "#282A36", fg = "#FFFFFF")
+        self.finish_button = tk.Button(self, text = "Finish", width = 7, command = self.master.destroy, bg = background_color, fg = font_color)
         self.finish_button.place(x = 115, y = 30)
-        self.console = tk.LabelFrame(self, text = "Console", height = 140, width = 300, bg = "#282A36", fg = "#FFFFFF")
+        self.console = tk.LabelFrame(self, text = "Console", height = 140, width = 300, bg = background_color, fg = font_color)
         self.console.place(x = 0, y =60)
-        self.console_life_label = tk.Label(self.console, text = "Life:", bg = "#282A36", fg = "#FFFFFF")
+        self.console_life_label = tk.Label(self.console, text = "Life:", bg = background_color, fg = font_color)
         self.console_life_label.place(x = 0, y = 20)
-        self.console_life = tk.Label(self.console, text = "300", bg = "#282A36", fg = "#FFFFFF")
+        self.console_life = tk.Label(self.console, text = "300", bg = background_color, fg = font_color)
         self.console_life.place(x = 30, y = 20)
-        self.console_points_label = tk.Label(self.console, text = "Point:", bg = "#282A36", fg = "#FFFFFF")
+        self.console_points_label = tk.Label(self.console, text = "Point:", bg = background_color, fg = font_color)
         self.console_points_label.place(x = 0, y = 40)
-        self.console_points = tk.Label(self.console, text = "0", bg = "#282A36", fg = "#FFFFFF")
+        self.console_points = tk.Label(self.console, text = "0", bg = background_color, fg = font_color)
         self.console_points.place(x = 35, y = 40)
-        self.collide_label = tk.Label(self.console, text = " ", bg = "#282A36", fg = "#FFFFFF")
+        self.collide_label = tk.Label(self.console, text = " ", bg = background_color, fg = font_color)
         self.collide_label.place(x = 0, y =60)
-        self.name_label = tk.Label(self.console, text = "Please, enter your name", bg = "#282A36", fg = "#FFFFFF")
+        self.name_label = tk.Label(self.console, text = "Please, enter your name", bg = background_color, fg = font_color)
         self.name_label.place(x = 0, y = 0)
 
     def str_name(self):
@@ -80,10 +83,12 @@ class windows(tk.Frame):
         self.counter_mov_enemy = 0
         self.coord_E1_X = random.randint(0,550)
         self.coord_E1_Y = random.randint(0,450)
+        
         self.enemy_Character_1 = Enemy((self.coord_E1_X, self.coord_E1_Y), "Enemy_Design/Enemy.png")
         if self.enemy_Character_1.rect.colliderect(self.jerry_Character.rect): #si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
             self.enemy_Character_1.rect.x = random.randint(0,550)
             self.enemy_Character_1.rect.y = random.randint(0,450)
+        
         self.coord_E2_X = random.randint(0,550)
         self.coord_E2_Y = random.randint(0,450)
         self.enemy_Character_2 = Enemy((self.coord_E2_X, self.coord_E2_Y), "Enemy_Design/Enemy.png")
@@ -96,6 +101,7 @@ class windows(tk.Frame):
         if self.enemy_Character_3.rect.colliderect(self.jerry_Character.rect): #si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
             self.enemy_Character_3.rect.x = random.randint(0,550)
             self.enemy_Character_3.rect.y = random.randint(0,450)
+
         #variables de la screw_Character
         self.coord_S_X = random.randint(0,550)
         self.coord_S_Y = random.randint(0,450)
@@ -110,23 +116,20 @@ class windows(tk.Frame):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.collide_label.config(text = " ")
-                    self.game_over = True
+                    self.game_over = True      
             #--------------------------LOGICA DEL VIDEOJUEGO------------------------------------
             self.random_enemy_x = random.randint(0,550)
             self.random_enemy_y = random.randint(0,450)
             self.random_screw_x = self.random_enemy_x
             self.random_screw_y = self.random_enemy_y
             self.counter_mov_enemy +=1 # este counter sirve para hacer que los enemy_Character se muevan (mirar el metodo "update" de la clase "Enemy")
-
             #refrescando los sprites
             self.enemy_Character_1.update(self.counter_mov_enemy,1) #para entender esto mirar el metodo "update" de la clase "Enemy"
             self.enemy_Character_2.update(self.counter_mov_enemy,2) #para entender esto mirar el metodo "update" de la clase "Enemy"
             self.enemy_Character_3.update(self.counter_mov_enemy,3) #para entender esto mirar el metodo "update" de la clase "Enemy"
             self.Jerry_heart.update(True) #para entender esto mirar el metodo "update" de la clase "Heart"
-            self.screw_Character.update(True) #para entender esto mirar el metodo "update" de la clase "Bag"
-            self.update_idletasks()
-            self.update()
-            
+            self.screw_Character.update(True) #para entender esto mirar el metodo "update" de la clase "Screw"
+            #-PARA UTILIZAR EL TECLADO
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     self.jerry_Character.update("right")
@@ -144,15 +147,16 @@ class windows(tk.Frame):
             self.screen.blit(self.enemy_Character_1.image, self.enemy_Character_1.rect)
             self.screen.blit(self.enemy_Character_2.image, self.enemy_Character_2.rect)
             self.screen.blit(self.enemy_Character_3.image, self.enemy_Character_3.rect)
+            #detectando colisiones del Jerry_character con los enemy_Character/screw_Character 
 
-            #detectando colisiones del Jerry_character con los enemy_Character/screw_Character
             if pygame.sprite.collide_mask(self.jerry_Character, self.enemy_Character_1):
-                self.Jerry_heart.life -= 100
-                self.Jerry_life -= 100
+                self.Jerry_heart.life -= 100 #SIRVE PARA QUE LA IMAGEN DEL CORAZON SE ACTUALICE
+                self.Jerry_life -= 100 #SIRVE PARA QUE SE ACTUALICE EL TEXTO Y SE CIERRE EL JUEGO
                 self.console_life.config(text = str(self.Jerry_life))
                 self.collide_label.config(text = "You have collided with Alpha")
                 self.enemy_Character_1.rect.x = self.random_enemy_x 
                 self.enemy_Character_1.rect.y = self.random_enemy_y
+            
             if pygame.sprite.collide_mask(self.jerry_Character, self.enemy_Character_2):
                 self.Jerry_heart.life -= 100
                 self.Jerry_life -= 100
@@ -167,13 +171,14 @@ class windows(tk.Frame):
                 self.collide_label.config(text = "You have collided with Gamma")
                 self.enemy_Character_3.rect.x = self.random_enemy_x 
                 self.enemy_Character_3.rect.y = self.random_enemy_y
+    
             if pygame.sprite.collide_mask(self.jerry_Character, self.screw_Character):
                 self.screw_Character.rect.x = self.random_screw_y
                 self.screw_Character.rect.y = self.random_screw_y
-                self.points += 1 #sumando puntos con la bolsita
-                self.life_points +=1
+                self.points += 1 #sumando puntos con la tuerca
+                self.life_points +=1 #sumando puntos al contador de vida
                 self.console_points.config(text = str(self.points))
-            #recuperando vida al tener 3 bolsita
+            #recuperando vida al tener 3 tuercas
             if self.life_points == 3:
                 self.Jerry_heart.life +=100
                 self.Jerry_life += 100
@@ -190,10 +195,10 @@ class windows(tk.Frame):
             #reiniciando el counter enemy_Character
             if self.counter_mov_enemy == 400:
                 self.counter_mov_enemy = 0
-
+            self.update() #ventana.update()
             pygame.display.flip()
-            self.clock.tick_busy_loop(27)
-        pygame.quit ()
+            self.clock.tick_busy_loop(60)
+        pygame.quit()
             #--------------------------LOGICA DEL VIDEOJUEGO------------------------------------
 if __name__ == "__main__":
     main()
