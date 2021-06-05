@@ -1,20 +1,14 @@
-#!/usr/bin/env python3
 import pygame
 import random
 import time
-from classes import*
-
+from jerrygame.dominio import*
 pygame.init()
-
-
 def main():
     videoGame = Jerry_Game()
-
-
 class Jerry_Game():
     def __init__(self):
         # variables de la ventana
-        self.fuenteMediana = pygame.font.SysFont("comicsansms", 70)
+        self.fuenteMediana = pygame.font.SysFont("comicsansms", 50)
         self.fuenteChica = pygame.font.SysFont("comicsansms", 20)
         self.darkBlue = (8, 3, 114)
         self.whiteBlue = (0, 171, 245)
@@ -23,7 +17,7 @@ class Jerry_Game():
         self.screen = pygame.display.set_mode(
             (self.screen_width, self.screen_height))
         pygame.display.set_caption("The Jerry Game")
-        self.background = pygame.image.load("Map_Design/Map.png").convert()
+        self.background = pygame.image.load("jerrygame/dominio/spritesdesign/map.png").convert()
         self.clock = pygame.time.Clock()
         self.initGame()
 
@@ -31,15 +25,15 @@ class Jerry_Game():
         self.Jerry_life = 300
         self.coord_Jerry_x = random.randint(0, 550)
         self.coord_Jerry_y = random.randint(0, 450)
-        self.jerry_Character = Jerry(
-            (self.coord_Jerry_x, self.coord_Jerry_y), "Player_Design/Player.png")
+        self.jerry_Character = Player.Player(
+            (self.coord_Jerry_x, self.coord_Jerry_y), "jerrygame/dominio/spritesdesign/player.png")
         # variables de los enemy_Character
         self.counter_mov_enemy = 0
         self.coord_E1_X = random.randint(0, 550)
         self.coord_E1_Y = random.randint(0, 450)
         self.mov_character = 4
-        self.enemy_Character_1 = Enemy(
-            (self.coord_E1_X, self.coord_E1_Y), "Enemy_Design/Enemy.png")
+        self.enemy_Character_1 = Enemy.Enemy(
+            (self.coord_E1_X, self.coord_E1_Y), "jerrygame/dominio/spritesdesign/enemy.png")
         # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
         if self.enemy_Character_1.rect.colliderect(self.jerry_Character.rect):
             self.enemy_Character_1.rect.x = random.randint(0, 550)
@@ -47,16 +41,16 @@ class Jerry_Game():
 
         self.coord_E2_X = random.randint(0, 550)
         self.coord_E2_Y = random.randint(0, 450)
-        self.enemy_Character_2 = Enemy(
-            (self.coord_E2_X, self.coord_E2_Y), "Enemy_Design/Enemy.png")
+        self.enemy_Character_2 = Enemy.Enemy(
+            (self.coord_E2_X, self.coord_E2_Y), "jerrygame/dominio/spritesdesign/enemy.png")
         # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
         if self.enemy_Character_2.rect.colliderect(self.jerry_Character.rect):
             self.enemy_Character_2.rect.x = random.randint(0, 550)
             self.enemy_Character_2.rect.y = random.randint(0, 450)
         self.coord_E3_X = random.randint(0, 550)
         self.coord_E3_Y = random.randint(0, 450)
-        self.enemy_Character_3 = Enemy(
-            (self.coord_E3_X, self.coord_E3_Y), "Enemy_Design/Enemy.png")
+        self.enemy_Character_3 = Enemy.Enemy(
+            (self.coord_E3_X, self.coord_E3_Y), "jerrygame/dominio/spritesdesign/enemy.png")
         # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
         if self.enemy_Character_3.rect.colliderect(self.jerry_Character.rect):
             self.enemy_Character_3.rect.x = random.randint(0, 550)
@@ -65,11 +59,11 @@ class Jerry_Game():
         # variables de la screw_Character
         self.coord_S_X = random.randint(0, 550)
         self.coord_S_Y = random.randint(0, 450)
-        self.screw_Character = Screw((self.coord_S_X, self.coord_S_Y))
+        self.screw_Character = Screw.Screw((self.coord_S_X, self.coord_S_Y))
         self.points = 0
         self.life_points = 0
         # variables de la vida
-        self.Jerry_heart = Heart((500, 10), self.Jerry_life)
+        self.Jerry_heart = Heart.Heart((500, 10), self.Jerry_life)
 
     def Game(self):
         self.createPlayer()
@@ -170,7 +164,7 @@ class Jerry_Game():
                 self.life_points = 0
             if self.Jerry_life <= 0:  # ACA SE CIERRA EL JUEGO
                 self.background = pygame.image.load(
-                    "Map_Design/Map.png")
+                    "jerrygame/dominio/spritesdesign/map.png")
                 message = self.fuenteMediana.render(
                     "You Lose!!", True, self.darkBlue)
                 self.screen.blit(
@@ -240,17 +234,14 @@ class Jerry_Game():
 
             self.screen.fill((0, 55, 79))
             initmessage = self.fuenteMediana.render(
-                "The Jerry Game!!", True, self.darkBlue)
-            self.screen.blit(initmessage, ((100), (200)))
-            initmessage2 = self.fuenteMediana.render(
                 "The Jerry Game!!", True, self.whiteBlue)
-            self.screen.blit(initmessage2, ((100), (203)))
+            centerInitMessage = initmessage.get_rect(center=(self.screen_width/2, self.screen_height/2))
+            self.screen.blit(initmessage, centerInitMessage)
             messageInit = self.fuenteChica.render(
-                "Para iniciar presiona la tecla I", True, self.darkBlue)
-            self.screen.blit(messageInit, (200, 270))
-            messageInit2 = self.fuenteChica.render(
                 "Para iniciar presiona la tecla I", True, self.whiteBlue)
-            self.screen.blit(messageInit2, (200, 272))
+            centerMessageInit = messageInit.get_rect(center=(self.screen_width/2, ((self.screen_height/2)-60)))
+            self.screen.blit(centerMessageInit, (200, 270))
+
             instruction1 = self.fuenteChica.render(
                 "Para pausar el juego presiona P", True, self.darkBlue)
             self.screen.blit(instruction1, (10, 470))
