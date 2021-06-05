@@ -10,6 +10,7 @@ class Jerry_Game():
         # variables de la ventana
         self.fuenteMediana = pygame.font.SysFont("comicsansms", 50)
         self.fuenteChica = pygame.font.SysFont("comicsansms", 20)
+        self.fuenteSub = pygame.font.SysFont("comicsansms", 14)
         self.darkBlue = (8, 3, 114)
         self.whiteBlue = (0, 171, 245)
         self.screen_width = 600
@@ -200,23 +201,15 @@ class Jerry_Game():
                         self.game_reset = True
                         pausado = False
             pauseMessage = self.fuenteMediana.render(
-                "Juego en pausa", True, (self.darkBlue))
-            self.screen.blit(pauseMessage, (100, 200))
-            pauseMessage2 = self.fuenteMediana.render(
                 "Juego en pausa", True, (self.whiteBlue))
-            self.screen.blit(pauseMessage2, (100, 203))
-            instruction1 = self.fuenteChica.render(
-                "Para quitar el pausado presiona C", True, self.darkBlue)
-            self.screen.blit(instruction1, (10, 470))
-            instruction2 = self.fuenteChica.render(
+            centerPauseMessage = pauseMessage.get_rect(center=(self.screen_width/2, self.screen_height/2))
+            self.screen.blit(pauseMessage, centerPauseMessage)
+            instruction1 = self.fuenteSub.render(
                 "Para quitar el pausado presiona C", True, self.whiteBlue)
-            self.screen.blit(instruction2, (10, 472))
-            salidaText = self.fuenteChica.render(
-                "Para salir pulsa E", True, self.darkBlue)
-            self.screen.blit(salidaText, (475, 470))
-            salidaText2 = self.fuenteChica.render(
+            self.screen.blit(instruction1, (10, 470))
+            salidaText = self.fuenteSub.render(
                 "Para salir pulsa E", True, self.whiteBlue)
-            self.screen.blit(salidaText2, (475, 472))
+            self.screen.blit(salidaText, (475, 470))
             pygame.display.update()
 
     def initGame(self):
@@ -239,21 +232,13 @@ class Jerry_Game():
             self.screen.blit(initmessage, centerInitMessage)
             messageInit = self.fuenteChica.render(
                 "Para iniciar presiona la tecla I", True, self.whiteBlue)
-            centerMessageInit = messageInit.get_rect(center=(self.screen_width/2, ((self.screen_height/2)-60)))
-            self.screen.blit(centerMessageInit, (200, 270))
-
-            instruction1 = self.fuenteChica.render(
-                "Para pausar el juego presiona P", True, self.darkBlue)
-            self.screen.blit(instruction1, (10, 470))
-            instruction2 = self.fuenteChica.render(
+            self.screen.blit(messageInit, (170, 300))
+            instruction1 = self.fuenteSub.render(
                 "Para pausar el juego presiona P", True, self.whiteBlue)
-            self.screen.blit(instruction2, (10, 472))
-            salidaText = self.fuenteChica.render(
-                "Para salir pulsa E", True, self.darkBlue)
-            self.screen.blit(salidaText, (475, 470))
-            salidaText2 = self.fuenteChica.render(
+            self.screen.blit(instruction1, (10, 470))
+            salidaText = self.fuenteSub.render(
                 "Para salir pulsa E", True, self.whiteBlue)
-            self.screen.blit(salidaText2, (475, 472))
+            self.screen.blit(salidaText, (475, 470))
             pygame.display.update()
         pygame.quit()
 
