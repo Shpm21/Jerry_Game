@@ -15,6 +15,7 @@ class Jerry_Game():
         self.whiteBlue = (0, 171, 245)
         self.screen_width = 600
         self.screen_height = 500
+        self.listaEnemigos = []
         self.screen = pygame.display.set_mode(
             (self.screen_width, self.screen_height))
         pygame.display.set_caption("The Jerry Game")
@@ -22,40 +23,24 @@ class Jerry_Game():
         self.clock = pygame.time.Clock()
         self.initGame()
 
+    def createEnemys(self, cantidad):
+        self.counter_mov_enemy = 0
+        self.cantidadEnemys = cantidad
+        for i in range(self.cantidadEnemys):
+            self.coord_E_X = random.randint(0, 550)
+            self.coord_E_Y = random.randint(0,450)
+            self.enemy_Character = Enemy.Enemy((self.coord_E_X, self.coord_E_Y), "jerrygame/dominio/spritesdesign/enemy.png")
+            if self.enemy_Character.rect.colliderect(self.jerry_Character.rect):
+                self.enemy_Character.rect.x = random.randint(0,550)
+                self.enemy_Character.rect.y = random.randint(0,450)
+            self.listaEnemigos.append(self.enemy_Character);
+
     def createPlayer(self):
         self.Jerry_life = 300
         self.coord_Jerry_x = random.randint(0, 550)
         self.coord_Jerry_y = random.randint(0, 450)
         self.jerry_Character = Player.Player(
             (self.coord_Jerry_x, self.coord_Jerry_y), "jerrygame/dominio/spritesdesign/player.png")
-        # variables de los enemy_Character
-        self.counter_mov_enemy = 0
-        self.coord_E1_X = random.randint(0, 550)
-        self.coord_E1_Y = random.randint(0, 450)
-        self.mov_character = 4
-        self.enemy_Character_1 = Enemy.Enemy(
-            (self.coord_E1_X, self.coord_E1_Y), "jerrygame/dominio/spritesdesign/enemy.png")
-        # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
-        if self.enemy_Character_1.rect.colliderect(self.jerry_Character.rect):
-            self.enemy_Character_1.rect.x = random.randint(0, 550)
-            self.enemy_Character_1.rect.y = random.randint(0, 450)
-
-        self.coord_E2_X = random.randint(0, 550)
-        self.coord_E2_Y = random.randint(0, 450)
-        self.enemy_Character_2 = Enemy.Enemy(
-            (self.coord_E2_X, self.coord_E2_Y), "jerrygame/dominio/spritesdesign/enemy.png")
-        # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
-        if self.enemy_Character_2.rect.colliderect(self.jerry_Character.rect):
-            self.enemy_Character_2.rect.x = random.randint(0, 550)
-            self.enemy_Character_2.rect.y = random.randint(0, 450)
-        self.coord_E3_X = random.randint(0, 550)
-        self.coord_E3_Y = random.randint(0, 450)
-        self.enemy_Character_3 = Enemy.Enemy(
-            (self.coord_E3_X, self.coord_E3_Y), "jerrygame/dominio/spritesdesign/enemy.png")
-        # si al iniciar el juego el enemigo esta en la posicion de Jerry, cambiar coordenadas
-        if self.enemy_Character_3.rect.colliderect(self.jerry_Character.rect):
-            self.enemy_Character_3.rect.x = random.randint(0, 550)
-            self.enemy_Character_3.rect.y = random.randint(0, 450)
 
         # variables de la screw_Character
         self.coord_S_X = random.randint(0, 550)
@@ -65,6 +50,19 @@ class Jerry_Game():
         self.life_points = 0
         # variables de la vida
         self.Jerry_heart = Heart.Heart((500, 10), self.Jerry_life)
+        self.createEnemys(2)
+
+    def updateEnemy(self):
+        self.counter_mov_enemy +=1
+        self.random_enemy_x = random.randint(0, 550)
+        self.random_enemy_y = random.randint(0, 450)   
+        self.mov_character = 4;
+        self.opcionmov = 1;
+        for i in range(self.cantidadEnemys):
+            self.listaEnemigos[i].update(self.counter_mov_enemy, self.opcionmov ,self.mov_character )  
+            self.opcionmov+=1
+            if self.opcionmov == 3:
+                self.opcionmov = 1 
 
     def Game(self):
         self.createPlayer()
@@ -93,18 +91,8 @@ class Jerry_Game():
             self.random_screw_x = self.random_enemy_x
             self.random_screw_y = self.random_enemy_y
             # este counter sirve para hacer que los enemy_Character se muevan (mirar el metodo "update" de la clase "Enemy")
-            self.counter_mov_enemy += 1
-            # refrescando los sprites
-            # para entender esto mirar el metodo "update" de la clase "Enemy"
-            self.enemy_Character_1.update(
-                self.counter_mov_enemy, 1, self.mov_character)
-            # para entender esto mirar el metodo "update" de la clase "Enemy"
-            self.enemy_Character_2.update(
-                self.counter_mov_enemy, 2, self.mov_character)
-            # para entender esto mirar el metodo "update" de la clase "Enemy"
-            self.enemy_Character_3.update(
-                self.counter_mov_enemy, 3, self.mov_character)
             # para entender esto mirar el metodo "update" de la clase "Heart"
+            self.updateEnemy()
             self.Jerry_heart.update(True)
             # para entender esto mirar el metodo "update" de la clase "Screw"
             self.screw_Character.update(True)
@@ -125,33 +113,20 @@ class Jerry_Game():
             self.screen.blit(self.Jerry_heart.image, self.Jerry_heart.rect)
             self.screen.blit(self.jerry_Character.image,
                              self.jerry_Character.rect)
-            self.screen.blit(self.enemy_Character_1.image,
-                             self.enemy_Character_1.rect)
-            self.screen.blit(self.enemy_Character_2.image,
-                             self.enemy_Character_2.rect)
-            self.screen.blit(self.enemy_Character_3.image,
-                             self.enemy_Character_3.rect)
+            for i in range(self.cantidadEnemys):
+                self.screen.blit(self.listaEnemigos[i].image, self.listaEnemigos[i].rect)
             self.screen.blit(pointMessage, (2, 0))
             self.screen.blit(lifeMessage, (2, 15))
             self.screen.blit(pointMessage2, (2, 3))
             self.screen.blit(lifeMessage2, (2, 18))
             # detectando colisiones del Jerry_character con los enemy_Character/screw_Character
+            for i in range(self.cantidadEnemys):
+                if pygame.sprite.collide_mask(self.jerry_Character, self.listaEnemigos[i]):
+                    self.Jerry_heart.life -= 100  # SIRVE PARA QUE LA IMAGEN DEL CORAZON SE ACTUALICE
+                    self.Jerry_life -= 100  # SIRVE PARA QUE SE ACTUALICE EL TEXTO Y SE CIERRE EL JUEGO
+                    self.listaEnemigos[i].rect.x = self.random_enemy_x
+                    self.listaEnemigos[i].rect.y = self.random_enemy_y                   
 
-            if pygame.sprite.collide_mask(self.jerry_Character, self.enemy_Character_1):
-                self.Jerry_heart.life -= 100  # SIRVE PARA QUE LA IMAGEN DEL CORAZON SE ACTUALICE
-                self.Jerry_life -= 100  # SIRVE PARA QUE SE ACTUALICE EL TEXTO Y SE CIERRE EL JUEGO
-                self.enemy_Character_1.rect.x = self.random_enemy_x
-                self.enemy_Character_1.rect.y = self.random_enemy_y
-            if pygame.sprite.collide_mask(self.jerry_Character, self.enemy_Character_2):
-                self.Jerry_heart.life -= 100
-                self.Jerry_life -= 100
-                self.enemy_Character_2.rect.x = self.random_enemy_x
-                self.enemy_Character_2.rect.y = self.random_enemy_y
-            if pygame.sprite.collide_mask(self.jerry_Character, self.enemy_Character_3):
-                self.Jerry_heart.life -= 100
-                self.Jerry_life -= 100
-                self.enemy_Character_3.rect.x = self.random_enemy_x
-                self.enemy_Character_3.rect.y = self.random_enemy_y
 
             if pygame.sprite.collide_mask(self.jerry_Character, self.screw_Character):
                 self.screw_Character.rect.x = self.random_screw_y
